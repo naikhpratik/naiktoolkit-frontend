@@ -1,0 +1,101 @@
+name: Build and Deploy to GKE
+
+on:
+  push:
+    branches:
+      - main
+      - naik/*
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+      
+      # Extract version from package.json and set it as an environment variable
+      - name: Get version from package.json
+        id: get_version
+        run: echo "VERSION=$(jq -r .version < package.json)" >> $GITHUB_ENV
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker to use the Google Cloud CLI
+        run: gcloud auth configure-docker --quiet
+
+      - name: Build Docker image
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit:${{ env.VERSION }}-${{ github.sha }} .
+
+      - name: Push Docker image to GCR
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit:${{ env.VERSION }}-${{ github.sha }}
+      
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ secrets.CLOUD_RUN_SERVICE_NAME }} \
+            --image gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit:${{ env.VERSION }}-${{ github.sha }} \
+            --platform managed \
+            --region ${{ secrets.CLOUD_RUN_REGION }} \
+            --allow-unauthenticated \
+            --set-env-vars API_KEY=${{ secrets.SECRET_API_KEY }} \
+            --set-env-vars GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json \
+            --project ${{ secrets.GCP_PROJECT }}
+      
+      # Fetch the service account secret and store it as a file on Cloud Run
+      - name: Fetch and store service account key
+        run: |
+          gcloud secrets versions access latest --secret=GCP_SA_CREDENTIALS > /tmp/key.json   
+  # deploy:
+  #   needs: build-and-push
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     # Extract version from package.json and set it as an environment variable
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+
+  #     - name: Get version from package.json
+  #       id: get_version
+  #       run: echo "VERSION=$(jq -r .version < package.json)" >> $GITHUB_ENV
+        
+  #     - name: Authenticate to Google Cloud
+  #       uses: google-github-actions/auth@v2
+  #       with:
+  #         credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+  #     - name: Install the gcloud cli
+  #       uses: google-github-actions/setup-gcloud@v2
+  #       with:
+  #         project_id: ${{ secrets.GCP_PROJECT }}
+  #         service_account_key: ${{ secrets.GCP_SA_KEY }}
+  #         install_components: 'gke-gcloud-auth-plugin'
+  #         export_default_credentials: true
+
+  #     - name: Get GKE credentials
+  #       run: |
+  #         gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT }}
+
+  #     - name: Deploy to GKE
+  #       run: |
+  #         kubectl set image deployment/naiktoolkit-api naiktoolkit-api=gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit:${{ env.VERSION }}-${{ github.sha }}
+      
+  #     # Apply the Kubernetes configuration
+  #     - name: Apply Kubernetes configuration
+  #       run: |
+  #         kubectl apply -f resource.yml
