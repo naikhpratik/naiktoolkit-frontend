@@ -9,7 +9,7 @@ const Login: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('/auth/login', { email, password });
+      const response = await axios.post('https://naiktoolkit-876527589412.us-east1.run.app/auth/login', { email, password });
       localStorage.setItem('token', response.data.token);
       navigate('/home');  // Redirect to Home page after login
     } catch (error) {
