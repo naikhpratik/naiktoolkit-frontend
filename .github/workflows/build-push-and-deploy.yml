@@ -40,27 +40,23 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit:${{ env.VERSION }}-${{ github.sha }} .
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit-frntend:${{ env.VERSION }}-${{ github.sha }} .
 
       - name: Push Docker image to GCR
         run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit:${{ env.VERSION }}-${{ github.sha }}
+          docker push gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit-frntend:${{ env.VERSION }}-${{ github.sha }}
       
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ secrets.CLOUD_RUN_SERVICE_NAME }} \
-            --image gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit:${{ env.VERSION }}-${{ github.sha }} \
+            --image gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit-frntend:${{ env.VERSION }}-${{ github.sha }} \
             --platform managed \
             --region ${{ secrets.CLOUD_RUN_REGION }} \
             --allow-unauthenticated \
-            --set-env-vars API_KEY=${{ secrets.SECRET_API_KEY }} \
-            --set-env-vars GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json \
+            --update-env-vars API_KEY=${{ secrets.SECRET_API_KEY }},GCP_PROJECT=${{ secrets.GCP_PROJECT }} \
+            --service-account=${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT }} \
             --project ${{ secrets.GCP_PROJECT }}
-      
-      # Fetch the service account secret and store it as a file on Cloud Run
-      - name: Fetch and store service account key
-        run: |
-          gcloud secrets versions access latest --secret=GCP_SA_CREDENTIALS > /tmp/key.json   
+             
   # deploy:
   #   needs: build-and-push
   #   runs-on: ubuntu-latest
