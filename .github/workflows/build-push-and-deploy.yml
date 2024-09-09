@@ -38,13 +38,13 @@ jobs:
       - name: Configure Docker to use the Google Cloud CLI
         run: gcloud auth configure-docker --quiet
 
-      # - name: Build Docker image
-      #   run: |
-      #     docker build -t gcr.io/naiktoolkit/${{ secrets.GCP_PROJECT }}:${{ env.VERSION }}-${{ github.sha }} .
+      - name: Build Docker image
+        run: |
+          docker build -t gcr.io/naiktoolkit/${{ secrets.GCP_PROJECT }}:${{ env.VERSION }}-${{ github.sha }} .
 
-      # - name: Push Docker image to GCR
-      #   run: |
-      #     docker push gcr.io/naiktoolkit/${{ secrets.GCP_PROJECT }}:${{ env.VERSION }}-${{ github.sha }}
+      - name: Push Docker image to GCR
+        run: |
+          docker push gcr.io/naiktoolkit/${{ secrets.GCP_PROJECT }}:${{ env.VERSION }}-${{ github.sha }}
       
       - name: Deploy to Cloud Run
         run: |
@@ -52,9 +52,8 @@ jobs:
           echo "Project: ${{ secrets.GCP_PROJECT }}"
           echo "Service: ${{ secrets.CLOUD_RUN_SERVICE_NAME }}"
           echo "Region: ${{ secrets.CLOUD_RUN_REGION }}"
-          echo "Service Account: ${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT }}
+          echo "Service Account: ${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT }}"
           
-          echo "CLOUD_RUN_SERVICE_ACCOUNT is not set. Deploying without specifying a service account."
           gcloud run deploy ${{ secrets.CLOUD_RUN_SERVICE_NAME }} \
             --image gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit:${{ env.VERSION }}-${{ github.sha }} \
             --platform managed \
