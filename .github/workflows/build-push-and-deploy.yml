@@ -53,13 +53,12 @@ jobs:
           echo "Service: ${{ secrets.CLOUD_RUN_SERVICE_NAME }}"
           echo "Region: ${{ secrets.CLOUD_RUN_REGION }}"
           echo "Service Account: ${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT }}"
-          
+
           gcloud run deploy ${{ secrets.CLOUD_RUN_SERVICE_NAME }} \
             --image gcr.io/${{ secrets.GCP_PROJECT }}/naiktoolkit:${{ env.VERSION }}-${{ github.sha }} \
             --platform managed \
             --region ${{ secrets.CLOUD_RUN_REGION }} \
             --allow-unauthenticated \
-            --project ${{ secrets.GCP_PROJECT }} \
             --verbosity=debug
 
   # deploy:
