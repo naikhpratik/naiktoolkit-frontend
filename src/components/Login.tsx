@@ -60,7 +60,9 @@ const Login: React.FC = () => {
               <label>
                 <input type="checkbox" /> remember me?
               </label>
-              <a href="#" style={styles.forgotPassword}>forgot password?</a>
+              <button onClick={() => {/* Handle forgot password */}} style={styles.forgotPassword}>
+                forgot password?
+              </button>
             </div>
           )}
           <button type="submit" style={styles.button}>
@@ -133,6 +135,11 @@ const styles = {
   forgotPassword: {
     color: '#5468ff',
     textDecoration: 'none',
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    font: 'inherit',
+    cursor: 'pointer',
   },
   socialLogin: {
     textAlign: 'center' as const,
