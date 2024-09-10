@@ -71,12 +71,12 @@ const Login: React.FC = () => {
         </form>
         {!isLogin && (
           <div style={styles.socialLogin}>
-            <p>Or create account using social media!</p>
+            {/* <p>Or create account using social media!</p>
             <div>
               <button style={styles.socialButton}>f</button>
               <button style={styles.socialButton}>t</button>
               <button style={styles.socialButton}>G</button>
-            </div>
+            </div> */}
           </div>
         )}
         <p onClick={() => setIsLogin(!isLogin)} style={styles.switchForm}>
