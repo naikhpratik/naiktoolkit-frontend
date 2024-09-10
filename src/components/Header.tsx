@@ -16,7 +16,7 @@ const Header: React.FC = () => {
   if (location.pathname === '/login') {
     return (
       <header style={styles.header}>
-        <h1 style={styles.title}></h1>
+        <h1 style={styles.title}>NaikToolkit</h1>
       </header>
     );
   }
