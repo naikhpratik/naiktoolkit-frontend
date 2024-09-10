@@ -59,7 +59,6 @@ jobs:
             --platform managed \
             --region ${{ secrets.CLOUD_RUN_REGION }} \
             --allow-unauthenticated \
-            -- project ${{ secrets.GCP_PROJECT }}
             --verbosity=debug
 
 
