@@ -14,6 +14,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       if (isLogin) {
+        console.log('Login form submitted');
         const response = await axios.post(`${config.API_URL}/auth/login`, { email, password });
         localStorage.setItem('token', response.data.token);
         navigate('/home');
