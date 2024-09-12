@@ -18,12 +18,18 @@ const Login: React.FC = () => {
         localStorage.setItem('token', response.data.token);
         navigate('/home');
       } else {
-        // Handle sign up logic here
-        console.log('Sign up with:', name, email, password);
-        // After successful sign up, you might want to automatically log in the user
+        // Handle sign up logic
+        const signupResponse = await axios.post(`${config.API_URL}/auth/signup`, { name, email, password });
+        console.log('Sign up successful:', signupResponse.data);
+      
+        // Automatically log in the user after successful signup
+        const loginResponse = await axios.post(`${config.API_URL}/auth/login`, { email, password });
+        localStorage.setItem('token', loginResponse.data.token);
+        navigate('/home');
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error(isLogin ? 'Login failed:' : 'Signup failed:', error);
+      // You might want to add some error handling here, e.g., displaying an error message to the user
     }
   };
 
