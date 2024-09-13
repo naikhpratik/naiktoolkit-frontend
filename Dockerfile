@@ -1,22 +1,16 @@
-# Use the official Node.js image as the base image
-FROM node:16-alpine
-
-# Set the working directory inside the container
-WORKDIR /usr/src/app
-
-# Copy package.json and package-lock.json (if available) to the working directory
+# Build stage
+FROM node:14 as build
+WORKDIR /app
 COPY package*.json ./
-
-# Install the dependencies
-RUN npm install --production
-
-# Copy the rest of the application code to the working directory
+RUN npm install
 COPY . .
 
 # Build the TypeScript code
 RUN npm run build
 
-# Expose the port the app runs on
+# Production stage
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 8080
 
 # Command to run the application
