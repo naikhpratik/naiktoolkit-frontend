@@ -1,65 +1,73 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+
+const HeaderContainer = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+`;
+
+const Logo = styled.div`
+  font-weight: bold;
+  font-size: 1.5rem;
+`;
+
+const Nav = styled.nav`
+  display: flex;
+  gap: 1rem;
+`;
+
+const NavLink = styled(Link)`
+  text-decoration: none;
+  color: #333;
+`;
+
+const SignOutButton = styled.button`
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  text-decoration: underline;
+`;
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isLoggedIn = !!localStorage.getItem('token'); // Simple check for login status
+  const isLoggedIn = Boolean(localStorage.getItem('token'));
 
-  const handleSignout = () => {
+  const handleSignout = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
     localStorage.removeItem('token');
-    // Clear any other stored user data if necessary
     navigate('/login');
-  };
+  }, [navigate]);
 
   // Don't show any navigation on the login page
   if (location.pathname === '/login') {
-    return (
-      <header style={styles.header}>
-        <h1 style={styles.title}>NaikToolkit</h1>
-      </header>
-    );
+    return null;
   }
-  
+
   return (
-    <header style={styles.header}>
-      <h1 style={styles.title}>NaikToolkit</h1>
-      <nav>
+    <HeaderContainer>
+      <Logo>Your Logo</Logo>
+      <Nav>
+        <NavLink to="/">Product</NavLink>
+        <NavLink to="/pricing">Pricing</NavLink>
+        <NavLink to="/about">About Us</NavLink>
+        <NavLink to="/contact">Contact</NavLink>
         {isLoggedIn ? (
-          <>
-            <Link to="/home" style={styles.link}>Home</Link>
-            <button onClick={handleSignout} style={styles.button}>Sign Out</button>
-          </>
+          <SignOutButton onClick={handleSignout}>Sign Out</SignOutButton>
         ) : (
-          <Link to="/login" style={styles.link}>Login</Link>
+          <NavLink to="/login">Sign In</NavLink>
         )}
-      </nav>
-    </header>
+      </Nav>
+    </HeaderContainer>
   );
 };
 
-const styles = {
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0 20px',
-  },
-  title: {
-    margin: 0,
-  },
-  link: {
-    marginRight: '15px',
-    textDecoration: 'none',
-    color: '#333',
-  },
-  button: {
-    background: 'none',
-    border: 'none',
-    color: '#333',
-    cursor: 'pointer',
-    fontSize: '1em',
-  },
-};
+export default React.memo(Header);
 
-export default Header;
+// export default Header;
