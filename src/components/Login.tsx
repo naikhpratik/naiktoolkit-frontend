@@ -17,7 +17,10 @@ const Login: React.FC = () => {
         console.log(isLogin)    
         const response = await axios.post(`${config.API_URL}/auth/login`, { email, password });
         localStorage.setItem('token', response.data.token);
-        navigate('/home');
+        // Ensure token is fully set before navigating
+        setTimeout(() => {
+          navigate('/home');  // Redirect to the desired page after successful login
+        }, 100); 
       } else {
         // Handle sign up logic
         const signupResponse = await axios.post(`${config.API_URL}/auth/signup`, { name, email, password });
