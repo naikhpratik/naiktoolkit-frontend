@@ -29,7 +29,10 @@ const Login: React.FC = () => {
         // Automatically log in the user after successful signup
         const loginResponse = await axios.post(`${config.API_URL}/auth/login`, { email, password });
         localStorage.setItem('token', loginResponse.data.token);
-        navigate('/home');
+        // Ensure token is fully set before navigating
+        setTimeout(() => {
+          navigate('/home');  // Redirect to the desired page after successful login
+        }, 100); 
       }
     } catch (error) {
       console.error(isLogin ? 'Login failed:' : 'Signup failed:', error);
