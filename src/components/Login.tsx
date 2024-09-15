@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import config from '../config';
+import { isValidEmail, isValidPassword, getPasswordRequirements } from '../utils/authValidation';
+import { TooltipContainer, TooltipText } from '../styles/AuthStyles';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -9,12 +11,15 @@ const Login: React.FC = () => {
   const [name, setName] = useState('');
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({ email: '', password: '', auth: '' });
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({ email: '', password: '', auth: '' });
+
     try {
       if (isLogin) {
-        console.log(isLogin)    
         const response = await axios.post(`${config.API_URL}/auth/login`, { email, password });
         localStorage.setItem('token', response.data.token);
         // Ensure token is fully set before navigating
@@ -22,10 +27,21 @@ const Login: React.FC = () => {
           navigate('/home');  // Redirect to the desired page after successful login
         }, 100); 
       } else {
+        // Handle validation
+        if (!isValidEmail(email)) {
+          setErrors(prev => ({ ...prev, email: 'Please enter a valid email address.' }));
+          return;
+        }
+    
+        if (!isValidPassword(password)) {
+          setErrors(prev => ({ ...prev, password: 'Password does not meet the requirements.' }));
+          return;
+        }
+    
         // Handle sign up logic
         const signupResponse = await axios.post(`${config.API_URL}/auth/signup`, { name, email, password });
         console.log('Sign up successful:', signupResponse.data);
-      
+        
         // Automatically log in the user after successful signup
         const loginResponse = await axios.post(`${config.API_URL}/auth/login`, { email, password });
         localStorage.setItem('token', loginResponse.data.token);
@@ -36,7 +52,12 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       console.error(isLogin ? 'Login failed:' : 'Signup failed:', error);
-      // You might want to add some error handling here, e.g., displaying an error message to the user
+      if (axios.isAxiosError(error) && error.response) {
+        // Handle specific error messages from the server
+        setErrors(prev => ({ ...prev, auth: error.response?.data?.message || 'Authentication failed. Please try again.' }));
+      } else {
+        setErrors(prev => ({ ...prev, auth: 'An unexpected error occurred. Please try again.' }));
+      }
     }
   };
 
@@ -44,6 +65,7 @@ const Login: React.FC = () => {
     <div style={styles.container}>
       <div style={styles.formContainer}>
         <h2 style={styles.title}>{isLogin ? 'Welcome!' : 'Create account!'}</h2>
+        {errors.auth && <p style={styles.error}>{errors.auth}</p>}
         <form onSubmit={handleSubmit} style={styles.form}>
           {!isLogin && (
             <input
@@ -61,13 +83,26 @@ const Login: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            style={styles.input}
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          {errors.email && <p className="error">{errors.email}</p>}
+          <TooltipContainer>
+            <input
+              style={styles.input}
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => setShowTooltip(true)}
+              onBlur={() => setShowTooltip(false)}
+            />
+            {showTooltip && (
+              <TooltipText>
+                {getPasswordRequirements().split('\n').map((line, index) => (
+                  <div key={index}>{line}</div>
+                ))}
+              </TooltipText>
+            )}
+          </TooltipContainer>
+          {errors.password && <p className="error">{errors.password}</p>}
           {isLogin && (
             <div style={styles.rememberForgot}>
               <label>
@@ -170,6 +205,10 @@ const styles = {
     marginTop: '1rem',
     color: '#5468ff',
     cursor: 'pointer',
+  },
+  error: {
+    color: 'red',
+    marginBottom: '1rem',
   },
 };
 
