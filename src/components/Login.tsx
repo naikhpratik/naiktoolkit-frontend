@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import config from '../config';
-import { isValidEmail, isValidPassword, getPasswordRequirements } from '../utils/authValidation';
+import * as authValidation from '../utils/authValidation';
 import { TooltipContainer, TooltipText } from '../styles/AuthStyles';
 
 const Login: React.FC = () => {
@@ -13,12 +13,20 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({ email: '', password: '', auth: '' });
   const [showTooltip, setShowTooltip] = useState(false);
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/home');
+    }
+  }, []); // Empty dependency array
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({ email: '', password: '', auth: '' });
 
     try {
+      console.log("Errors : ", errors)
       if (isLogin) {
         const response = await axios.post(`${config.API_URL}/auth/login`, { email, password });
         localStorage.setItem('token', response.data.token);
@@ -28,27 +36,29 @@ const Login: React.FC = () => {
         }, 100); 
       } else {
         // Handle validation
-        if (!isValidEmail(email)) {
+        if (!authValidation.isValidEmail(email)) {
           setErrors(prev => ({ ...prev, email: 'Please enter a valid email address.' }));
           return;
         }
-    
-        if (!isValidPassword(password)) {
+
+        if (!authValidation.isValidPassword(password)) {
           setErrors(prev => ({ ...prev, password: 'Password does not meet the requirements.' }));
           return;
         }
-    
-        // Handle sign up logic
-        const signupResponse = await axios.post(`${config.API_URL}/auth/signup`, { name, email, password });
-        console.log('Sign up successful:', signupResponse.data);
-        
-        // Automatically log in the user after successful signup
-        const loginResponse = await axios.post(`${config.API_URL}/auth/login`, { email, password });
-        localStorage.setItem('token', loginResponse.data.token);
-        // Ensure token is fully set before navigating
-        setTimeout(() => {
-          navigate('/home');  // Redirect to the desired page after successful login
-        }, 100); 
+
+        if(!errors.auth && !errors.email && !errors.password){
+           // Handle sign up login   
+          const signupResponse = await axios.post(`${config.API_URL}/auth/signup`, { name, email, password });
+          console.log('Sign up successful:', signupResponse.data);
+          
+          // Automatically log in the user after successful signup
+          const loginResponse = await axios.post(`${config.API_URL}/auth/login`, { email, password });
+          localStorage.setItem('token', loginResponse.data.token);
+          // Ensure token is fully set before navigating
+          setTimeout(() => {
+            navigate('/home');  // Redirect to the desired page after successful login
+          }, 100); 
+        }
       }
     } catch (error) {
       console.error(isLogin ? 'Login failed:' : 'Signup failed:', error);
@@ -96,7 +106,7 @@ const Login: React.FC = () => {
             />
             {showTooltip && (
               <TooltipText>
-                {getPasswordRequirements().split('\n').map((line, index) => (
+                {authValidation.getPasswordRequirements().split('\n').map((line, index) => (
                   <div key={index}>{line}</div>
                 ))}
               </TooltipText>
