@@ -1,9 +1,7 @@
-import config from '../config';
-import axios from 'axios';
+
 
 // Regular expression for email validation
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,6}$/;
-
 // Password criteria
 const MIN_PASSWORD_LENGTH = 8;
 const REQUIRE_UPPERCASE = true;

@@ -64,7 +64,7 @@ const Login: React.FC = () => {
       console.error(isLogin ? 'Login failed:' : 'Signup failed:', error);
       if (axios.isAxiosError(error) && error.response) {
         // Handle specific error messages from the server
-        setErrors(prev => ({ ...prev, auth: error.response?.data?.message || 'Authentication failed. Please try again.' }));
+        setErrors(prev => ({ ...prev, auth: error.response?.data?.message ?? 'Authentication failed. Please try again.' }));
       } else {
         setErrors(prev => ({ ...prev, auth: 'An unexpected error occurred. Please try again.' }));
       }
