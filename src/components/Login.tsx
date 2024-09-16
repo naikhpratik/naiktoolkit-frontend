@@ -26,7 +26,7 @@ const Login: React.FC = () => {
         // Ensure token is fully set before navigating
         setTimeout(() => {
           navigate('/home');  // Redirect to the desired page after successful login
-        }, 100); 
+        }, 200); 
       } else {
         // Move validation logic outside of the try-catch block
         if (!authValidation.isValidEmail(email)) {
@@ -45,6 +45,8 @@ const Login: React.FC = () => {
         const signupResponse = await axios.post(`${config.API_URL}/auth/signup`, { name, email, password });
         console.log('Sign up successful:', signupResponse.data);
         
+        // Wait for a short time to ensure the backend has processed the signup
+        await new Promise(resolve => setTimeout(resolve, 1000));
         // Automatically log in the user after successful signup
         const loginResponse = await axios.post(`${config.API_URL}/auth/login`, { email, password });
         localStorage.setItem('token', loginResponse.data.token);
