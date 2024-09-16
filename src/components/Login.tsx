@@ -21,40 +21,43 @@ const Login: React.FC = () => {
     try {
       // console.log("Errors : ", errors)
       if (isLogin) {
+        console.log("Logging in : ", isLogin)
         const response = await axios.post(`${config.API_URL}/auth/login`, { email, password });
+        console.log("Response after logging ", response);
         localStorage.setItem('token', response.data.token);
         // Ensure token is fully set before navigating
         setTimeout(() => {
+          console.log("Going to home page now");
           navigate('/home');  // Redirect to the desired page after successful login
-        }, 200); 
+        }, 100); 
       } else {
         // Move validation logic outside of the try-catch block
         if (!authValidation.isValidEmail(email)) {
           setErrors(prev => ({ ...prev, email: 'Please enter a valid email address.' }));
           return;
         }
-
         if (!authValidation.isValidPassword(password)) {
           setErrors(prev => ({ ...prev, password: 'Password does not meet the requirements.' }));
           return;
         }
 
-        // Remove this condition as it's always true and might cause unnecessary re-renders
-        // if(!errors.auth && !errors.email && !errors.password){
         // Handle sign up login   
         const signupResponse = await axios.post(`${config.API_URL}/auth/signup`, { name, email, password });
         console.log('Sign up successful:', signupResponse.data);
         
         // Wait for a short time to ensure the backend has processed the signup
         await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log("Moving On");
+
         // Automatically log in the user after successful signup
         const loginResponse = await axios.post(`${config.API_URL}/auth/login`, { email, password });
-        localStorage.setItem('token', loginResponse.data.token);
+        console.log('Log up successful:', loginResponse.data);
+
         // Ensure token is fully set before navigating
         setTimeout(() => {
+          localStorage.setItem('token', loginResponse.data.token);
           navigate('/home');  // Redirect to the desired page after successful login
         }, 100); 
-        // }
       }
     } catch (error) {
       console.error(isLogin ? 'Login failed:' : 'Signup failed:', error);
