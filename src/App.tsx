@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Home from './components/Home';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import RootRedirect from './components/RootRedirect';
 
 const App: React.FC = () => {
 
@@ -17,6 +18,7 @@ const App: React.FC = () => {
         </header>
         <main className="body">
           <Routes>
+            <Route path="/" element={<RootRedirect />} />
             <Route path="/login" element={<Login />} />
             {isLoggedIn ? (
               <Route path="/home" element={<Home />} />

@@ -13,20 +13,13 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({ email: '', password: '', auth: '' });
   const [showTooltip, setShowTooltip] = useState(false);
-  
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/home');
-    }
-  }, []); // Empty dependency array
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({ email: '', password: '', auth: '' });
 
     try {
-      console.log("Errors : ", errors)
+      // console.log("Errors : ", errors)
       if (isLogin) {
         const response = await axios.post(`${config.API_URL}/auth/login`, { email, password });
         localStorage.setItem('token', response.data.token);
@@ -35,7 +28,7 @@ const Login: React.FC = () => {
           navigate('/home');  // Redirect to the desired page after successful login
         }, 100); 
       } else {
-        // Handle validation
+        // Move validation logic outside of the try-catch block
         if (!authValidation.isValidEmail(email)) {
           setErrors(prev => ({ ...prev, email: 'Please enter a valid email address.' }));
           return;
@@ -46,19 +39,20 @@ const Login: React.FC = () => {
           return;
         }
 
-        if(!errors.auth && !errors.email && !errors.password){
-           // Handle sign up login   
-          const signupResponse = await axios.post(`${config.API_URL}/auth/signup`, { name, email, password });
-          console.log('Sign up successful:', signupResponse.data);
-          
-          // Automatically log in the user after successful signup
-          const loginResponse = await axios.post(`${config.API_URL}/auth/login`, { email, password });
-          localStorage.setItem('token', loginResponse.data.token);
-          // Ensure token is fully set before navigating
-          setTimeout(() => {
-            navigate('/home');  // Redirect to the desired page after successful login
-          }, 100); 
-        }
+        // Remove this condition as it's always true and might cause unnecessary re-renders
+        // if(!errors.auth && !errors.email && !errors.password){
+        // Handle sign up login   
+        const signupResponse = await axios.post(`${config.API_URL}/auth/signup`, { name, email, password });
+        console.log('Sign up successful:', signupResponse.data);
+        
+        // Automatically log in the user after successful signup
+        const loginResponse = await axios.post(`${config.API_URL}/auth/login`, { email, password });
+        localStorage.setItem('token', loginResponse.data.token);
+        // Ensure token is fully set before navigating
+        setTimeout(() => {
+          navigate('/home');  // Redirect to the desired page after successful login
+        }, 100); 
+        // }
       }
     } catch (error) {
       console.error(isLogin ? 'Login failed:' : 'Signup failed:', error);
