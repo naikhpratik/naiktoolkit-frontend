@@ -29,7 +29,7 @@ const Login: React.FC = () => {
         setTimeout(() => {
           console.log("Going to home page now");
           navigate('/home');  // Redirect to the desired page after successful login
-        }, 100); 
+        }, 100);
       } else {
         // Move validation logic outside of the try-catch block
         if (!authValidation.isValidEmail(email)) {
@@ -44,7 +44,7 @@ const Login: React.FC = () => {
         // Handle sign up login   
         const signupResponse = await axios.post(`${config.API_URL}/auth/signup`, { name, email, password });
         console.log('Sign up successful:', signupResponse.data);
-        
+
         // Wait for a short time to ensure the backend has processed the signup
         await new Promise(resolve => setTimeout(resolve, 1000));
         console.log("Moving On");
@@ -57,13 +57,13 @@ const Login: React.FC = () => {
         setTimeout(() => {
           localStorage.setItem('token', loginResponse.data.token);
           navigate('/home');  // Redirect to the desired page after successful login
-        }, 100); 
+        }, 100);
       }
     } catch (error) {
       console.error(isLogin ? 'Login failed:' : 'Signup failed:', error);
       if (axios.isAxiosError(error) && error.response) {
         // Handle specific error messages from the server
-        setErrors(prev => ({ ...prev, auth: error.response?.data?.message ?? 'Authentication failed. Please try again.' }));
+        // setErrors(prev => ({ ...prev, auth: error.response?.data?.message ?? 'Authentication failed. Please try again.' }));
       } else {
         setErrors(prev => ({ ...prev, auth: 'An unexpected error occurred. Please try again.' }));
       }
@@ -117,7 +117,7 @@ const Login: React.FC = () => {
               <label>
                 <input type="checkbox" /> remember me?
               </label>
-              <button onClick={() => {/* Handle forgot password */}} style={styles.forgotPassword}>
+              <button onClick={() => {/* Handle forgot password */ }} style={styles.forgotPassword}>
                 forgot password?
               </button>
             </div>
