@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import * as authValidation from '../../utils/authValidation';
 import { useAuth } from "../../context/useAuth";
 import { useForm } from "react-hook-form";
 import "./login.css"
