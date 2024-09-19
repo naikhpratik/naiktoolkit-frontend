@@ -61,12 +61,12 @@ const LoginPage = (props: Props) => {
                 <form onSubmit={handleSubmit(handleAuth)} className="form">
                     {!isLogin && (
                         <>
-                            <input {...register("name")} className="input" type="name" placeholder="Enter Full Name" />
+                            <input {...register("name")} className="input" type="name" placeholder="Enter Full Name" onChange={() => clearError()}/>
                             {errors.name && <p className="error">{errors.name.message}</p>}
                         </>
                     )}
                     <div>
-                        <input {...register("email")} className="input" type="email" placeholder="Email" />
+                        <input {...register("email")} className="input" type="email" placeholder="Email" onChange={() => clearError()}/>
                         {errors.email && <p className="error">{errors.email.message}</p>}
                     </div>
                     <div>
@@ -87,7 +87,7 @@ const LoginPage = (props: Props) => {
                         {isLogin ? "Login" : "Sign Up"}
                     </button>
                 </form>
-                <p className="switchForm hover:underline" onClick={toggleForm}>
+                <p className="switchForm hover:underline" onClick={toggleForm} >
                     {isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
                 </p>
             </div>
