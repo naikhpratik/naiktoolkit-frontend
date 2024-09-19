@@ -87,7 +87,7 @@ const LoginPage = (props: Props) => {
                         {isLogin ? "Login" : "Sign Up"}
                     </button>
                 </form>
-                <p className="switchForm hover:underline">
+                <p className="switchForm hover:underline" onClick={toggleForm}>
                     {isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
                 </p>
             </div>

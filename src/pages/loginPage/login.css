@@ -3,17 +3,18 @@
   justify-content: center; /* Changed from flex-end to center */
   align-items: center;
   min-height: 100vh;
-  background-color: #131e30;
+  background-color: #f0f4f8; /* Light grayish blue background */
   padding: 20px; /* Add some padding to prevent touching screen edges */
 }
 
 .formContainer {
-  background-color: #e0f2e9; /* Light green background */
+  background-color: #ffffff; /* White background for form */
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 24rem; /* Adjust based on your needs */
+  max-width: 320px; /* Adjust this value to control the overall form width */
+  margin: 0 auto; /* Centers the form if it's narrower than its container */
   /* Remove margin-right: auto if it was added previously */
 }
 
@@ -22,7 +23,7 @@
   font-weight: bold;
   text-align: center;
   margin-bottom: 1.5rem;
-  color: #4a4a4a;
+  color: #2c3e50; /* Dark blue-gray for text */
 }
 
 .form {
@@ -33,16 +34,16 @@
 }
 
 .input {
-  width: 100%;
+  width: 90%;
   padding: 0.75rem;
-  border: none;
+  border: 1px solid #bdc3c7; /* Light gray border */
   border-radius: 0.5rem;
-  background-color: #c5e3d5; /* Lighter blue for input fields */
+  background-color: #e8f0fe; /* Very light blue for input fields */
 }
 
 .input:focus {
   outline: none;
-  box-shadow: 0 0 0 2px #3b82f6; /* This mimics the ring effect */
+  box-shadow: 0 0 0 2px #3498db; /* Light blue focus ring */
 }
 
 .button {
@@ -50,7 +51,7 @@
   padding: 0.75rem;
   border: none;
   border-radius: 0.5rem;
-  background-color: #7ba7d0; /* Blue color for button */
+  background-color: #3498db; /* Light blue for button */
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -58,18 +59,18 @@
 }
 
 .button:hover {
-  background-color: #6291b8;
+  background-color: #2980b9; /* Slightly darker blue on hover */
 }
 
 .switchForm {
   text-align: center;
   margin-top: 1rem;
-  color: #7ba7d0;
+  color: #3498db; /* Light blue for link text */
   cursor: pointer;
 }
 
 .error {
-  color: #ef4444;
+  color: #e74c3c; /* Soft red for error messages */
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
