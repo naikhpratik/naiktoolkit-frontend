@@ -15,7 +15,7 @@ type AuthFormInputs = {
 
 const LoginPage = (props: Props) => {
     const [isLogin, setIsLogin] = useState(true);
-    const { loginUser, registerUser } = useAuth();
+    const { loginUser, registerUser, error, clearError } = useAuth();
     const {
         register,
         handleSubmit,
@@ -28,7 +28,6 @@ const LoginPage = (props: Props) => {
     });
 
     useEffect(() => {
-        console.log('Form errors:', errors);
     }, [errors]);
 
     const handleAuth = (form: AuthFormInputs) => {
@@ -38,6 +37,11 @@ const LoginPage = (props: Props) => {
         } else {
             registerUser(form.name!, form.email, form.password);
         }
+    };
+
+    const toggleForm = () => {
+        setIsLogin(!isLogin);
+        clearError();
     };
 
     return (
@@ -64,11 +68,13 @@ const LoginPage = (props: Props) => {
                       }}
                     />
                     {errors.password && <p className="error">{errors.password.message}</p>}
+                    {/* Display error message */}
+                    {error && <div style={{ color: 'red' }}>{error}</div>}
                     <button type="submit" className="button">
                         {isLogin ? "Login" : "Sign Up"}
                     </button>
                 </form>
-                <p className="switchForm" onClick={() => setIsLogin(!isLogin)}>
+                <p className="switchForm" onClick={toggleForm}>
                     {isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
                 </p>
             </div>

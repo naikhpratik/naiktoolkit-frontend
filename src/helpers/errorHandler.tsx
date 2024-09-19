@@ -22,3 +22,20 @@ export const handleError = (error: any) => {
     }
   }
 };
+
+// Add this function to handle custom error messages
+export const getErrorMessage = (errorCode: string): string => {
+  switch (errorCode) {
+    case 'INVALID_CREDENTIALS':
+      return 'Invalid email or password';
+    case 'USER_NOT_FOUND':
+      return 'User not found';
+    case 'ACCOUNT_LOCKED':
+      return 'Account is locked. Please contact support';
+    case 'USER_EXISTS':
+      return 'User Already Exist. Please Try to Login or Use Different Email.';
+    // Add more cases as needed
+    default:
+      return 'An unexpected error occurred';
+  }
+};
