@@ -1,85 +1,75 @@
 .container {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Changed from flex-end to center */
   align-items: center;
-  height: 100vh;
-  background-color: #f0f2f5;
+  min-height: 100vh;
+  background-color: #131e30;
+  padding: 20px; /* Add some padding to prevent touching screen edges */
 }
 
 .formContainer {
-  background-color: white;
+  background-color: #e0f2e9; /* Light green background */
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  width: 100%;
+  max-width: 24rem; /* Adjust based on your needs */
+  /* Remove margin-right: auto if it was added previously */
 }
 
 .title {
+  font-size: 1.5rem;
+  font-weight: bold;
   text-align: center;
-  color: #4a4a4a;
   margin-bottom: 1.5rem;
+  color: #4a4a4a;
 }
 
 .form {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem; /* Increased gap between form elements */
+  padding: 1rem; /* Add padding inside the form */
 }
 
 .input {
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #c5e3d5; /* Lighter blue for input fields */
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6; /* This mimics the ring effect */
 }
 
 .button {
-  background-color: #5468ff;
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #7ba7d0; /* Blue color for button */
   color: white;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 4px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.rememberForgot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  font-size: 0.8rem;
-}
-
-.forgotPassword {
-  color: #5468ff;
-  text-decoration: none;
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-}
-
-.socialLogin {
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.socialButton {
-  margin: 0 0.5rem;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
+.button:hover {
+  background-color: #6291b8;
 }
 
 .switchForm {
   text-align: center;
   margin-top: 1rem;
-  color: #5468ff;
+  color: #7ba7d0;
   cursor: pointer;
 }
 
 .error {
-  color: red;
-  margin-bottom: 1rem;
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 }

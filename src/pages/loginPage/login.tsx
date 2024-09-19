@@ -21,10 +21,11 @@ const LoginPage = (props: Props) => {
         handleSubmit,
         formState: { errors },
         clearErrors,
+        watch,
     } = useForm<AuthFormInputs>({
         resolver: yupResolver(loginValidations),
         context: { isLogin },
-        mode: 'onBlur', // Add this line
+        mode: 'onBlur', 
     });
 
     useEffect(() => {
@@ -44,10 +45,19 @@ const LoginPage = (props: Props) => {
         clearError();
     };
 
+    // Using watch for multiple fields
+    const [email, password] = watch(["email", "password"]);
+    React.useEffect(() => {
+        if (email && password) {
+            console.log("Email or password changed:", email, password);
+            clearError();
+        }
+    }, [email, password, clearError]);
+
     return (
         <div className="container">
-            <div className="formContainer">
-                <h2 className="title">{isLogin ? "Welcome Back!" : "Create Account"}</h2>
+            <div className="formContainer sm:max-w-md md:max-w-lg">
+                <h2 className="title text-xl sm:text-2xl md:text-3xl">{isLogin ? "Welcome Back!" : "Create Account"}</h2>
                 <form onSubmit={handleSubmit(handleAuth)} className="form">
                     {!isLogin && (
                         <>
@@ -55,26 +65,29 @@ const LoginPage = (props: Props) => {
                             {errors.name && <p className="error">{errors.name.message}</p>}
                         </>
                     )}
-                    <input {...register("email")} className="input" type="email" placeholder="Email" />
-                    {errors.email && <p className="error">{errors.email.message}</p>}
-                    <input 
-                      {...register("password")} 
-                      className="input" 
-                      type="password" 
-                      placeholder="Password"
-                      onChange={(e) => {
-                        register("password").onChange(e);
-                        clearErrors("password");
-                      }}
-                    />
-                    {errors.password && <p className="error">{errors.password.message}</p>}
-                    {/* Display error message */}
-                    {error && <div style={{ color: 'red' }}>{error}</div>}
-                    <button type="submit" className="button">
+                    <div>
+                        <input {...register("email")} className="input" type="email" placeholder="Email" />
+                        {errors.email && <p className="error">{errors.email.message}</p>}
+                    </div>
+                    <div>
+                        <input 
+                          {...register("password")} 
+                          className="input" 
+                          type="password" 
+                          placeholder="Password"
+                          onChange={(e) => {
+                            register("password").onChange(e);
+                            clearErrors("password");
+                          }}
+                        />
+                        {errors.password && <p className="error">{errors.password.message}</p>}
+                    </div>
+                    {error && <div className="error">{error}</div>}
+                    <button type="submit" className="button hover:bg-blue-700">
                         {isLogin ? "Login" : "Sign Up"}
                     </button>
                 </form>
-                <p className="switchForm" onClick={toggleForm}>
+                <p className="switchForm hover:underline">
                     {isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
                 </p>
             </div>

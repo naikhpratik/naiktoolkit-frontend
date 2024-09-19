@@ -34,6 +34,8 @@ export const getErrorMessage = (errorCode: string): string => {
       return 'Account is locked. Please contact support';
     case 'USER_EXISTS':
       return 'User Already Exist. Please Try to Login or Use Different Email.';
+    case 'NO_USER_EXISTS_EMAIL':
+      return 'Invalid email or password';
     // Add more cases as needed
     default:
       return 'An unexpected error occurred';
