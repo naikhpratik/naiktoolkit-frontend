@@ -3,7 +3,7 @@ import { useAuth } from "../../context/useAuth";
 import { useForm } from "react-hook-form";
 import "./login.css"
 import { yupResolver } from '@hookform/resolvers/yup';
-import { loginValidations } from './loginValidation';
+import { loginValidations, signupValidations } from './loginValidation';
 
 type Props = {};
 
@@ -23,7 +23,7 @@ const LoginPage = (props: Props) => {
         clearErrors,
         watch,
     } = useForm<AuthFormInputs>({
-        resolver: yupResolver(loginValidations),
+        resolver: yupResolver(isLogin ? loginValidations : signupValidations),
         context: { isLogin },
         mode: 'onBlur', 
     });
@@ -45,14 +45,14 @@ const LoginPage = (props: Props) => {
         clearError();
     };
 
-    // Using watch for multiple fields
-    const [email, password] = watch(["email", "password"]);
-    React.useEffect(() => {
-        if (email && password) {
-            console.log("Email or password changed:", email, password);
-            clearError();
-        }
-    }, [email, password, clearError]);
+    // // Using watch for multiple fields
+    // const [email, password] = watch(["email", "password"]);
+    // React.useEffect(() => {
+    //     if (email && password) {
+    //         console.log("Email or password changed:", email, password);
+    //         clearError();
+    //     }
+    // }, [email, password, clearError]);
 
     return (
         <div className="container">
