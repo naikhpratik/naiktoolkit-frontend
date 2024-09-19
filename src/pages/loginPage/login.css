@@ -1,0 +1,76 @@
+.container {
+  display: flex;
+  justify-content: center; /* Changed from flex-end to center */
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f4f8; /* Light grayish blue background */
+  padding: 20px; /* Add some padding to prevent touching screen edges */
+}
+
+.formContainer {
+  background-color: #ffffff; /* White background for form */
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 320px; /* Adjust this value to control the overall form width */
+  margin: 0 auto; /* Centers the form if it's narrower than its container */
+  /* Remove margin-right: auto if it was added previously */
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2c3e50; /* Dark blue-gray for text */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Increased gap between form elements */
+  padding: 1rem; /* Add padding inside the form */
+}
+
+.input {
+  width: 90%;
+  padding: 0.75rem;
+  border: 1px solid #bdc3c7; /* Light gray border */
+  border-radius: 0.5rem;
+  background-color: #e8f0fe; /* Very light blue for input fields */
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3498db; /* Light blue focus ring */
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #3498db; /* Light blue for button */
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #2980b9; /* Slightly darker blue on hover */
+}
+
+.switchForm {
+  text-align: center;
+  margin-top: 1rem;
+  color: #3498db; /* Light blue for link text */
+  cursor: pointer;
+}
+
+.error {
+  color: #e74c3c; /* Soft red for error messages */
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
